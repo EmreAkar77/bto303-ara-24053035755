@@ -71,18 +71,18 @@
                         <polygon points="55,168 70,165 70,175" fill="#f43f5e"/>
                     </svg>
 
-                    <!-- Hızlı İstatistik Sayaçları -->
+                    <!-- Hızlı İstatistik Sayaçları (Canlı Kiralama Tarihleri Esaslı) -->
                     <div class="grid grid-cols-3 gap-2 mt-2 pt-2 border-t border-slate-700/60 text-center">
                         <div class="bg-slate-900/50 rounded-lg p-1.5">
-                            <span class="block text-base font-extrabold text-white">{{ $vehicles->total() }}</span>
+                            <span class="block text-base font-extrabold text-white">{{ $totalVehicles }}</span>
                             <span class="block text-[10px] text-slate-400">Toplam Araç</span>
                         </div>
                         <div class="bg-slate-900/50 rounded-lg p-1.5">
-                            <span class="block text-base font-extrabold text-emerald-400">{{ \App\Models\Vehicle::where('status', 'available')->count() }}</span>
+                            <span class="block text-base font-extrabold text-emerald-400">{{ $availableCount }}</span>
                             <span class="block text-[10px] text-slate-400">Müsait</span>
                         </div>
                         <div class="bg-slate-900/50 rounded-lg p-1.5">
-                            <span class="block text-base font-extrabold text-blue-400">{{ \App\Models\Vehicle::where('status', 'rented')->count() }}</span>
+                            <span class="block text-base font-extrabold text-blue-400">{{ $rentedCount }}</span>
                             <span class="block text-[10px] text-slate-400">Kirada</span>
                         </div>
                     </div>

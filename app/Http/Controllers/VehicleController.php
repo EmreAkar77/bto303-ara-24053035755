@@ -6,6 +6,7 @@ use App\Http\Requests\StoreVehicleRequest;
 use App\Http\Requests\UpdateVehicleRequest;
 use App\Models\Branch;
 use App\Models\Vehicle;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -52,7 +53,21 @@ class VehicleController extends Controller
         $vehicles = $query->paginate(8)->withQueryString();
         $branches = Branch::orderBy('name')->get();
 
-        return view('vehicles.index', compact('vehicles', 'branches'));
+        // Hero banner canlı sayaçları:
+        // status yalnızca maintenance için kontrol edilir.
+        // Kirada olma durumu doğrudan bugünün kiralama tarihlerinden gelir.
+        $today = Carbon::today()->format('Y-m-d');
+        $totalVehicles = Vehicle::count();
+        $maintenanceCount = Vehicle::where('status', 'maintenance')->count();
+        $rentedCount = Vehicle::where('status', '!=', 'maintenance')
+            ->whereHas('rentals', function ($q) use ($today) {
+                $q->where('status', '!=', 'cancelled')
+                    ->where('start_date', '<=', $today)
+                    ->where('end_date', '>=', $today);
+            })->count();
+        $availableCount = max(0, $totalVehicles - $maintenanceCount - $rentedCount);
+
+        return view('vehicles.index', compact('vehicles', 'branches', 'totalVehicles', 'maintenanceCount', 'rentedCount', 'availableCount'));
     }
 
     /**
@@ -112,8 +127,8 @@ class VehicleController extends Controller
      */
     public function destroy(Vehicle $vehicle): RedirectResponse
     {
-        if ($vehicle->rentals()->where('status', 'active')->exists()) {
-            return back()->with('error', 'Aktif kiralaması bulunan araç sistemden silinemez. Önce kiralama durumunu güncelleyiniz.');
+        if ($vehicle->rentals()->exists()) {
+            return back()->with('error', 'Bu araca ait geçmiş veya mevcut kiralama kayıtları bulunmaktadır. Sistem bütünlüğü gereği kiralama kaydı olan araçlar silinemez.');
         }
 
         $plate = $vehicle->plate_number;
