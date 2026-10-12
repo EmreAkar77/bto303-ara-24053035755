@@ -50,17 +50,16 @@ class Rental extends Model
 
     /**
      * Checks if given dates conflict with active/existing rentals for the same vehicle.
-     * Cancelled rentals are strictly excluded.
+     * Delegates directly to Vehicle::isAvailableBetween to ensure single source of truth.
      */
     public static function hasDateConflict(int $vehicleId, string $startDate, string $endDate, ?int $excludeRentalId = null): bool
     {
-        return self::where('vehicle_id', $vehicleId)
-            ->where('status', '!=', 'cancelled')
-            ->when($excludeRentalId, fn ($query) => $query->where('id', '!=', $excludeRentalId))
-            ->where(function ($query) use ($startDate, $endDate) {
-                $query->where('start_date', '<=', $endDate)
-                    ->where('end_date', '>=', $startDate);
-            })
-            ->exists();
+        $vehicle = Vehicle::find($vehicleId);
+
+        if (! $vehicle) {
+            return false;
+        }
+
+        return ! $vehicle->isAvailableBetween($startDate, $endDate, $excludeRentalId);
     }
 }

@@ -46,8 +46,14 @@
                     <a href="{{ route('vehicles.index') }}" class="px-3 py-2 rounded-md text-sm font-medium transition {{ request()->routeIs('vehicles.*') ? 'bg-blue-600 text-white shadow' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                         Araç Filosu
                     </a>
+                    <a href="{{ route('availability.index') }}" class="px-3 py-2 rounded-md text-sm font-medium transition {{ request()->routeIs('availability.*') ? 'bg-blue-600 text-white shadow' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        Müsait Araç Ara
+                    </a>
                     <a href="{{ route('rentals.index') }}" class="px-3 py-2 rounded-md text-sm font-medium transition {{ request()->routeIs('rentals.*') ? 'bg-blue-600 text-white shadow' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                         Kiralamalar
+                    </a>
+                    <a href="{{ route('statistics.index') }}" class="px-3 py-2 rounded-md text-sm font-medium transition {{ request()->routeIs('statistics.*') ? 'bg-blue-600 text-white shadow' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        İstatistikler
                     </a>
                     <a href="{{ route('branches.index') }}" class="px-3 py-2 rounded-md text-sm font-medium transition {{ request()->routeIs('branches.*') ? 'bg-blue-600 text-white shadow' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                         Şubeler
@@ -83,8 +89,14 @@
             <a href="{{ route('vehicles.index') }}" class="block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('vehicles.*') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-800' }}">
                 Araç Filosu
             </a>
+            <a href="{{ route('availability.index') }}" class="block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('availability.*') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-800' }}">
+                Müsait Araç Ara
+            </a>
             <a href="{{ route('rentals.index') }}" class="block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('rentals.*') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-800' }}">
                 Kiralamalar
+            </a>
+            <a href="{{ route('statistics.index') }}" class="block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('statistics.*') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-800' }}">
+                İstatistikler
             </a>
             <a href="{{ route('branches.index') }}" class="block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('branches.*') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-800' }}">
                 Şubeler

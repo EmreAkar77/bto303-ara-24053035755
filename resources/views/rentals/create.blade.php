@@ -24,7 +24,7 @@
                 <select name="vehicle_id" id="vehicle_id" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white @error('vehicle_id') border-rose-500 ring-1 ring-rose-500 @enderror" required>
                     <option value="">Araç Seçiniz</option>
                     @foreach($vehicles as $veh)
-                        <option value="{{ $veh->id }}" {{ (old('vehicle_id', $selectedVehicleId) == $veh->id) ? 'selected' : '' }}>
+                        <option value="{{ $veh->id }}" {{ (old('vehicle_id', request('vehicle_id', $selectedVehicleId)) == $veh->id) ? 'selected' : '' }}>
                             {{ $veh->plate_number }} - {{ $veh->brand }} {{ $veh->model }} (Günlük: {{ number_format($veh->daily_rate, 2, ',', '.') }} TL - Şube: {{ $veh->branch->name ?? 'Merkez' }})
                         </option>
                     @endforeach
@@ -57,7 +57,7 @@
                     <select name="pickup_branch_id" id="pickup_branch_id" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white @error('pickup_branch_id') border-rose-500 ring-1 ring-rose-500 @enderror" required>
                         <option value="">Şube Seçiniz</option>
                         @foreach($branches as $branch)
-                            <option value="{{ $branch->id }}" {{ old('pickup_branch_id') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                            <option value="{{ $branch->id }}" {{ old('pickup_branch_id', request('pickup_branch_id')) == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                         @endforeach
                     </select>
                     @error('pickup_branch_id')
@@ -70,7 +70,7 @@
                     <select name="return_branch_id" id="return_branch_id" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white @error('return_branch_id') border-rose-500 ring-1 ring-rose-500 @enderror" required>
                         <option value="">Şube Seçiniz</option>
                         @foreach($branches as $branch)
-                            <option value="{{ $branch->id }}" {{ old('return_branch_id') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                            <option value="{{ $branch->id }}" {{ old('return_branch_id', request('pickup_branch_id')) == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                         @endforeach
                     </select>
                     @error('return_branch_id')
@@ -83,7 +83,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="start_date" class="block text-sm font-medium text-slate-700 mb-1">Alış Tarihi <span class="text-rose-500">*</span></label>
-                    <input type="date" name="start_date" id="start_date" value="{{ old('start_date', date('Y-m-d')) }}" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none @error('start_date') border-rose-500 ring-1 ring-rose-500 @enderror" required>
+                    <input type="date" name="start_date" id="start_date" value="{{ old('start_date', request('start_date', date('Y-m-d'))) }}" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none @error('start_date') border-rose-500 ring-1 ring-rose-500 @enderror" required>
                     @error('start_date')
                         <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
                     @enderror
@@ -91,7 +91,7 @@
 
                 <div>
                     <label for="end_date" class="block text-sm font-medium text-slate-700 mb-1">Teslim Tarihi <span class="text-rose-500">*</span></label>
-                    <input type="date" name="end_date" id="end_date" value="{{ old('end_date', date('Y-m-d', strtotime('+3 days'))) }}" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none @error('end_date') border-rose-500 ring-1 ring-rose-500 @enderror" required>
+                    <input type="date" name="end_date" id="end_date" value="{{ old('end_date', request('end_date', date('Y-m-d', strtotime('+3 days')))) }}" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none @error('end_date') border-rose-500 ring-1 ring-rose-500 @enderror" required>
                     @error('end_date')
                         <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
                     @enderror
