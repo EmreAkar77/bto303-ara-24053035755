@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Branch;
+use App\Models\Rental;
 use App\Models\Vehicle;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -107,9 +108,9 @@ class VehicleTest extends TestCase
     }
 
     /**
-     * Test 5: Araç CRUD - Aktif kiralaması olmayan araç başarıyla silinebilir.
+     * Test 5: Araç CRUD - Kiralama kaydı olmayan araç başarıyla silinebilir.
      */
-    public function test_vehicle_can_be_deleted_when_no_active_rental_exists(): void
+    public function test_vehicle_can_be_deleted_when_no_rental_exists(): void
     {
         $branch = Branch::factory()->create();
         $vehicle = Vehicle::factory()->create(['branch_id' => $branch->id]);
@@ -119,5 +120,25 @@ class VehicleTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect(route('vehicles.index'));
         $this->assertDatabaseMissing('vehicles', ['id' => $vehicle->id]);
+    }
+
+    /**
+     * Test 6: Geçmişi veya iptal edilmiş kiralaması olan araç silinmek istendiğinde 500 hatası almadan oturum uyarısıyla engellenir.
+     */
+    public function test_vehicle_with_rental_history_cannot_be_deleted_and_shows_error_message(): void
+    {
+        $vehicle = Vehicle::factory()->create();
+
+        // İptal edilmiş veya tamamlanmış kiralama geçmişi
+        Rental::factory()->create([
+            'vehicle_id' => $vehicle->id,
+            'status' => 'cancelled',
+        ]);
+
+        $response = $this->delete(route('vehicles.destroy', $vehicle));
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('error', 'Bu araca ait geçmiş veya mevcut kiralama kayıtları bulunmaktadır. Sistem bütünlüğü gereği kiralama kaydı olan araçlar silinemez.');
+        $this->assertDatabaseHas('vehicles', ['id' => $vehicle->id]);
     }
 }
